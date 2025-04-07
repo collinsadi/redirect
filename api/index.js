@@ -15,14 +15,17 @@ app.use((err, req, res, next) => {
 
 // Redirect all GET requests
 app.get("*", (req, res) => {
-  const targetUrl = `${baseUrl}/${req.path}${
-    req.query ? "?" + new URLSearchParams(req.query).toString() : ""
-  }`;
-  res.redirect(301, targetUrl); // Using 301 for permanent redirect
+  const path = req.path.replace(/^\/+/, ""); // remove leading slashes
+  const queryString = Object.keys(req.query).length
+    ? "?" + new URLSearchParams(req.query).toString()
+    : "";
+
+  const targetUrl = `${baseUrl}${path}${queryString}`;
+  res.redirect(301, targetUrl);
 });
 
 app.all("*", (req, res) => {
-  res.status(307).redirect(`https://tethry.xyz${req.path}`);
+  res.status(307).redirect(`${baseUrl}${req.path}`);
 });
 
 module.exports = app;
