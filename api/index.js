@@ -10,19 +10,26 @@ if (!baseUrl.endsWith('/')) {
   baseUrl += '/';
 }
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
-});
-
-app.all('*', (req, res) => {
+app.use((req, res) => {
   const originalPathAndQuery = req.originalUrl;
   const pathSegment = originalPathAndQuery.startsWith('/')
     ? originalPathAndQuery.substring(1)
     : originalPathAndQuery;
+
   const targetUrl = `${baseUrl}${pathSegment}`;
   console.log(`Redirecting ${req.method} ${req.originalUrl} to: ${targetUrl}`);
+
   res.redirect(308, targetUrl);
+});
+
+
+app.use((err, req, res, next) => {
+  console.error("Error => ", err.stack);
+  if (!res.headersSent) {
+     res.status(500).send("Something broke!");
+  } else {
+     next(err);
+  }
 });
 
 const PORT = process.env.PORT || 3000;
