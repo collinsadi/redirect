@@ -21,6 +21,7 @@ app.get("*", (req, res) => {
     : "";
 
   const targetUrl = `${baseUrl}${path}${queryString}`;
+  console.log("Redirectinng to:", targetUrl);
   res.redirect(301, targetUrl);
 });
 
@@ -28,4 +29,6 @@ app.all("*", (req, res) => {
   res.status(307).redirect(`${baseUrl}${req.path}`);
 });
 
-module.exports = app;
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
