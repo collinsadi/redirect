@@ -15,7 +15,7 @@ app.use((err, req, res, next) => {
 
 // Redirect all GET requests
 app.get("/*splat", (req, res) => {
-  const path = req.path.replace(/^\/+/, ""); // remove leading slashes
+  const path = req.path;
   const queryString = Object.keys(req.query).length
     ? "?" + new URLSearchParams(req.query).toString()
     : "";
