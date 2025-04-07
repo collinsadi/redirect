@@ -14,19 +14,15 @@ app.use((err, req, res, next) => {
 });
 
 // Redirect all GET requests
-app.get("*", (req, res) => {
+app.get("/*splat", (req, res) => {
   const path = req.path.replace(/^\/+/, ""); // remove leading slashes
   const queryString = Object.keys(req.query).length
     ? "?" + new URLSearchParams(req.query).toString()
     : "";
 
   const targetUrl = `${baseUrl}${path}${queryString}`;
-  console.log("Redirectinng to:", targetUrl);
+  console.log("Redirecting to:", targetUrl);
   res.redirect(301, targetUrl);
-});
-
-app.all("*", (req, res) => {
-  res.status(307).redirect(`${baseUrl}${req.path}`);
 });
 
 app.listen(3000, () => {
